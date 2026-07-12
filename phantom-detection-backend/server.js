@@ -15,8 +15,9 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: '*',
-        methods: ['GET', 'POST', 'PUT', 'DELETE']
+        origin: ['https://triangiulate-api.vercel.app', 'http://localhost:5173', 'http://localhost:5000'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        credentials: true
     }
 });
 
@@ -51,7 +52,11 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {});
 });
 
-app.use(cors());
+app.use(cors({
+    origin: ['https://triangiulate-api.vercel.app', 'http://localhost:5173', 'http://localhost:5000'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}));
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/authRoutes'));
