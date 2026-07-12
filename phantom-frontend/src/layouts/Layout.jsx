@@ -6,9 +6,9 @@ export default function Layout() {
     const body = { fontFamily: '"General Sans", ui-sans-serif, system-ui, sans-serif' };
     const mono = { fontFamily: '"JetBrains Mono", ui-monospace, monospace' };
     return (
-    <div style={{ display: 'flex', minHeight: '100vh', width: '100%' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', width: '100%', overflowX: 'hidden' }}>
       <Sidebar />
-      <main style={{ flex: 1 }}>
+      <main className="flex-1 w-full pt-16 lg:pt-0">
         <Outlet />
       </main>
     </div>
