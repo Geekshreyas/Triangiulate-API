@@ -8,7 +8,7 @@ export default function Layout() {
     return (
     <div style={{ display: 'flex', minHeight: '100vh', width: '100%', overflowX: 'hidden' }}>
       <Sidebar />
-      <main className="flex-1 w-full pt-16 lg:pt-0">
+      <main className="flex-1 w-full">
         <Outlet />
       </main>
     </div>

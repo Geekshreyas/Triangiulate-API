@@ -82,7 +82,7 @@ const SubmitClaim = () => {
 
     return (
         <div className="min-h-screen w-full" style={{ background: 'radial-gradient(1000px 500px at 80% -10%, rgba(0,242,254,0.06), transparent 60%), #0B0F19', color: '#F8FAFC', ...body }}>
-            <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+            <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8 pt-20 pb-8 lg:py-12">
                 <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}>
                     <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.22em]" style={{ color: '#00F2FE', ...mono }}>
                         <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#00F2FE] shadow-[0_0_10px_#00F2FE]" />
