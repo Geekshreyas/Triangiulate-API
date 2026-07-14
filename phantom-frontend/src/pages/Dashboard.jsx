@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { io } from 'socket.io-client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Filter, ChevronLeft, ChevronRight, ShieldCheck, AlertTriangle, Inbox } from 'lucide-react';
+import { Filter, ChevronLeft, ChevronRight, ShieldCheck, AlertTriangle, Inbox, ArrowDownUp } from 'lucide-react';
 import api from '../utils/api';
 
 const Dashboard = () => {
@@ -20,11 +20,15 @@ const Dashboard = () => {
         const savedFlagged = sessionStorage.getItem('dashboard_flagged');
         return savedFlagged === 'true';
     });
+    const [sortBy, setSortBy] = useState(() => {
+        return sessionStorage.getItem('dashboard_sort') || 'risk';
+    });
 
     useEffect(() => {
         sessionStorage.setItem('dashboard_page', currentPage);
         sessionStorage.setItem('dashboard_flagged', showOnlyFlagged);
-    }, [currentPage, showOnlyFlagged]);
+        sessionStorage.setItem('dashboard_sort', sortBy);
+    }, [currentPage, showOnlyFlagged, sortBy]);
 
     const [refreshTrigger, setRefreshTrigger] = useState(0);
 
@@ -32,14 +36,14 @@ const Dashboard = () => {
         setLoading(true);
         try {
             const response = await api.get('/api/claims', {
-                params: { page: currentPage, limit: 10, flagged: showOnlyFlagged }
+                params: { page: currentPage, limit: 10, flagged: showOnlyFlagged, sortBy }
             });
             setClaims(response.data.docs);
             setTotalPages(response.data.totalPages);
         } catch (error) {} finally {
             setLoading(false);
         }
-    }, [currentPage, showOnlyFlagged]);
+    }, [currentPage, showOnlyFlagged, sortBy]);
 
     useEffect(() => { fetchClaims(); }, [fetchClaims, refreshTrigger]);
 
@@ -81,20 +85,37 @@ const Dashboard = () => {
                         </p>
                     </div>
 
-                    <motion.button
-                        whileHover={{ y: -1 }} whileTap={{ scale: 0.98 }}
-                        onClick={() => { setShowOnlyFlagged(!showOnlyFlagged); setCurrentPage(1); }}
-                        className="shrink-0 inline-flex items-center gap-2 rounded-full px-4 sm:px-5 py-2.5 text-sm transition-colors"
-                        style={{
-                            border: showOnlyFlagged ? '1px solid rgba(239,68,68,0.5)' : '1px solid rgba(0,242,254,0.35)',
-                            background: showOnlyFlagged ? 'rgba(239,68,68,0.08)' : 'rgba(0,242,254,0.06)',
-                            color: showOnlyFlagged ? '#FCA5A5' : '#8FF7FF',
-                            fontWeight: 500,
-                        }}
-                    >
-                        <Filter size={15} />
-                        {showOnlyFlagged ? 'Flagged only · clear' : 'Filter · flagged claims'}
-                    </motion.button>
+                    <div className="flex gap-2">
+                        <motion.button
+                            whileHover={{ y: -1 }} whileTap={{ scale: 0.98 }}
+                            onClick={() => { setSortBy(prev => prev === 'risk' ? 'latest' : 'risk'); setCurrentPage(1); }}
+                            className="shrink-0 inline-flex items-center gap-2 rounded-full px-4 sm:px-5 py-2.5 text-sm transition-colors"
+                            style={{
+                                border: '1px solid rgba(148,163,184,0.3)',
+                                background: 'rgba(30,41,59,0.5)',
+                                color: '#CBD5E1',
+                                fontWeight: 500,
+                            }}
+                        >
+                            <ArrowDownUp size={15} />
+                            {sortBy === 'risk' ? 'Sort: Highest Risk' : 'Sort: Latest'}
+                        </motion.button>
+
+                        <motion.button
+                            whileHover={{ y: -1 }} whileTap={{ scale: 0.98 }}
+                            onClick={() => { setShowOnlyFlagged(!showOnlyFlagged); setCurrentPage(1); }}
+                            className="shrink-0 inline-flex items-center gap-2 rounded-full px-4 sm:px-5 py-2.5 text-sm transition-colors"
+                            style={{
+                                border: showOnlyFlagged ? '1px solid rgba(239,68,68,0.5)' : '1px solid rgba(0,242,254,0.35)',
+                                background: showOnlyFlagged ? 'rgba(239,68,68,0.08)' : 'rgba(0,242,254,0.06)',
+                                color: showOnlyFlagged ? '#FCA5A5' : '#8FF7FF',
+                                fontWeight: 500,
+                            }}
+                        >
+                            <Filter size={15} />
+                            {showOnlyFlagged ? 'Flagged only · clear' : 'Filter · flagged claims'}
+                        </motion.button>
+                    </div>
                 </motion.div>
 
                 <motion.div

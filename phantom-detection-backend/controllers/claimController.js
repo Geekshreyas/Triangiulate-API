@@ -73,10 +73,15 @@ const getClaims = async (req, res) => {
             matchStage.submittedBy = req.user._id;
         }
 
+        let sortStage = { riskScore: -1 };
+        if (req.query.sortBy === 'latest') {
+            sortStage = { createdAt: -1 };
+        }
+
         const aggregateQuery = Claim.aggregate([
             { $match: matchStage },
             {
-                $sort: { riskScore: -1 }
+                $sort: sortStage
             }
         ]);
 
