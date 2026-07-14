@@ -5,7 +5,7 @@ const submitClaim = async (req, res) => {
     try {
         let documentUrl = null;
         if (req.file) {
-            documentUrl = req.file.path; 
+            documentUrl = req.file.secure_url || req.file.url || req.file.path; 
         }
 
         const parsedProcedures = typeof req.body.procedures === 'string' 
@@ -204,7 +204,7 @@ const updateClaim = async (req, res) => {
 
         let documentUrl = claim.documentUrl;
         if (req.file) {
-            documentUrl = req.file.path; 
+            documentUrl = req.file.secure_url || req.file.url || req.file.path; 
         }
 
         const parsedProcedures = typeof req.body.procedures === 'string' 
